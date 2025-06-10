@@ -19,20 +19,24 @@ pip install markdown-typst
 
 ````python
 import markdown
-import markdown_typst
+from markdown_typst.typst_extension import TypstExtension
 
-md = markdown.Markdown(extensions=["markdown_typst.typst_extension"])
+md = markdown.Markdown(extensions=[TypstExtension()])
 input_text = '''
+
+# This is a markdown title
+
 ```typst
 // typst-preview
-# Your Typst code here
+// This is a simple Typst document
+= This is a typst title
 ```
 
 '''
 
 html = md.convert(input_text)
-print(html)
-
+with open('output.html', 'w') as f:
+    f.write(html)
 ````
 
 ### Integrate Typst Rendering with MkDocs
