@@ -47,11 +47,33 @@ class TypstPreprocessor(Preprocessor):
                     f.write(code)
                 try:
                     svg_bytes = typst.compile(filename, format="svg")
-                    svg_str = svg_bytes.decode("utf-8")
-                    svg_str = indent + minify_xml(svg_str)
+                    if isinstance(svg_bytes, bytes):
+                        svg_str = svg_bytes.decode("utf-8")
+                        svg_str = indent + minify_xml(svg_str)
+                    elif isinstance(svg_bytes, list):
+                        if "column" in code.splitlines()[0]:
+                            svg_str = "<br>".join(
+                                indent + minify_xml(svg_bytes_item.decode("utf-8"))
+                                for svg_bytes_item in svg_bytes
+                            )
+                        else:
+                            svg_str = "\n".join(
+                                indent + minify_xml(svg_bytes_item.decode("utf-8"))
+                                for svg_bytes_item in svg_bytes
+                            )
+                    else:
+                        raise ValueError("Unexpected type from typst.compile")
+                except Exception as e:
+                    svg_str = f"<p>Error processing Typst code</p>"
+                    svg_str = indent + svg_str
                 finally:
                     os.remove(filename)
                 # Insert SVG directly
+                style = ''
+                if "center" in code.splitlines()[0]:
+                    style += "text-align: center;"
+                if style:
+                    svg_str = f'<div style="{style}">{svg_str}</div>'
                 new_text += svg_str + "\n"
             else:
                 # Keep as fenced code block
