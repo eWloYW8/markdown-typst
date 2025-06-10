@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="markdown-typst",
-    version="0.1.1",
+    version="0.1.2",
     author="eWloYW8",
     author_email="3171132517@qq.com",
     description="A Markdown extension to compile typst code blocks to SVG.",
