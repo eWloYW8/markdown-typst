@@ -22,7 +22,7 @@ import markdown_typst
 md = markdown.Markdown(extensions=["markdown_typst.typst_extension"])
 input_text = '''
 ```typst
-typst-preview
+// typst-preview
 # Your Typst code here
 ```
 
