@@ -71,7 +71,7 @@ class TypstPreprocessor(Preprocessor):
                 if "center" in code.splitlines()[0]:
                     style += "text-align: center;"
                 if style:
-                    svg_str = f'<div style="{style}">{svg_str}</div>'
+                    svg_str = indent + f'<div style="{style}">{svg_str}</div>'
                 new_text += svg_str + "\n"
             else:
                 # Keep as fenced code block
