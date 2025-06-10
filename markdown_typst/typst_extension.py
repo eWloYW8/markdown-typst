@@ -52,13 +52,11 @@ class TypstPreprocessor(Preprocessor):
                         svg_str = indent + minify_xml(svg_str)
                     elif isinstance(svg_bytes, list):
                         if "column" in code.splitlines()[0]:
-                            svg_str = "<br>".join(
-                                indent + minify_xml(svg_bytes_item.decode("utf-8"))
+                            svg_str = indent + "<br>".join(minify_xml(svg_bytes_item.decode("utf-8"))
                                 for svg_bytes_item in svg_bytes
                             )
                         else:
-                            svg_str = "\n".join(
-                                indent + minify_xml(svg_bytes_item.decode("utf-8"))
+                            svg_str = indent + "".join(minify_xml(svg_bytes_item.decode("utf-8"))
                                 for svg_bytes_item in svg_bytes
                             )
                     else:
