@@ -39,6 +39,12 @@ with open('output.html', 'w') as f:
     f.write(html)
 ````
 
+It is recommended to use the following Typst code to set the page size and margins:
+
+```typst
+#set page(width: auto, height: auto, margin: .5cm)
+```
+
 ### Integrate Typst Rendering with MkDocs
 
 To enable Typst syntax rendering in MkDocs, add the following lines to your `mkdocs.yml`:
