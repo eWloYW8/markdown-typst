@@ -1,6 +1,6 @@
-# markdown-typst
+# python-markdown-typst
 
-[![Build and Release](https://github.com/eWloYW8/markdown-typst/actions/workflows/release.yml/badge.svg)](https://github.com/eWloYW8/markdown-typst/actions/workflows/release.yml)
+[![Build and Release](https://github.com/eWloYW8/python-markdown-typst/actions/workflows/release.yml/badge.svg)](https://github.com/eWloYW8/python-markdown-typst/actions/workflows/release.yml)
 
 A Python Markdown extension that compiles `typst` fenced code blocks into inline SVG images.
 
