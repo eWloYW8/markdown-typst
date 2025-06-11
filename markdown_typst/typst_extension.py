@@ -5,6 +5,7 @@ import typst
 import uuid
 import os
 import re
+import traceback
 
 
 def minify_xml(svg_str):
@@ -49,29 +50,39 @@ class TypstPreprocessor(Preprocessor):
                     svg_bytes = typst.compile(filename, format="svg")
                     if isinstance(svg_bytes, bytes):
                         svg_str = svg_bytes.decode("utf-8")
-                        svg_str = indent + minify_xml(svg_str)
+                        svg_str = minify_xml(svg_str)
                     elif isinstance(svg_bytes, list):
                         if "column" in code.splitlines()[0]:
-                            svg_str = indent + "<br>".join(minify_xml(svg_bytes_item.decode("utf-8"))
+                            svg_str = "<br>".join(minify_xml(svg_bytes_item.decode("utf-8"))
                                 for svg_bytes_item in svg_bytes
                             )
                         else:
-                            svg_str = indent + "".join(minify_xml(svg_bytes_item.decode("utf-8"))
+                            svg_str = "".join(minify_xml(svg_bytes_item.decode("utf-8"))
                                 for svg_bytes_item in svg_bytes
                             )
                     else:
                         raise ValueError("Unexpected type from typst.compile")
+
+                    style = ''
+                    if "center" in code.splitlines()[0]:
+                        style += "text-align: center;"
+                    if style:
+                        svg_str = indent + f'<div style="{style}">{svg_str}</div>'
+                    else:
+                        svg_str = indent + svg_str
                 except Exception as e:
-                    svg_str = f"<p>Error processing Typst code</p>"
-                    svg_str = indent + svg_str
+                    if "debug" in code.splitlines()[0]:
+                        svg_str = indent + "!!! failure \"Error processing Typst code\"\n" \
+                                         + (indent + "    ```" + "\n" + indent + "    ") \
+                                         + ("\n" + indent + "    ").join(traceback.format_exc().splitlines()) + "\n" \
+                                         + (indent + "    ```")
+                    else:
+                        svg_str = indent + "!!! failure \"Error processing Typst code\"\n" \
+                                         + (indent + "    Use `typst-preview debug` to show details")
+                    print(svg_str)
                 finally:
                     os.remove(filename)
                 # Insert SVG directly
-                style = ''
-                if "center" in code.splitlines()[0]:
-                    style += "text-align: center;"
-                if style:
-                    svg_str = indent + f'<div style="{style}">{svg_str}</div>'
                 new_text += svg_str + "\n"
             else:
                 # Keep as fenced code block
